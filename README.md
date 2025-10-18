@@ -14,6 +14,12 @@ Para construir via Docker:
 make docker-build
 ```
 
+Caso seja preciso retornar eliminar os arquivos criados:
+
+```
+make clean
+```
+
 # Execução dos programas
 
 Para fazer a carga inicial dos dados e criar banco de dados:
@@ -70,7 +76,7 @@ Para buscar no arquivo de índice secundário o registro com o \*\*título** inf
 make docker-run-seek2 titulo=**título**
 ```
 
-Caso não seja especificado o parâmetro, será feita a busca com o título "Spatially-multiplexed MIMO markers.".
+Caso não seja especificado o parâmetro, será feita a busca com o título "2".
 
 * Dentro do container:
 

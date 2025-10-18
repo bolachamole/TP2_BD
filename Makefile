@@ -1,13 +1,24 @@
 id = 123
-titulo = Spatially-multiplexed MIMO markers.
+titulo = 2
+
+SRCDIR := src
+OBJDIR := objs
+SRCF := $(wildcard $(SRCDIR)/*.cpp)
+OBJF := $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SRCF))
+
+$(OBJDIR)/%.o : $(SRCDIR)/%.cpp | $(OBJDIR)
+	g++ -c $< -o $@
+
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
 
 .PHONY: build
 
-build:
-	g++ src/upload.cpp -o bin/upload
-	g++ src/findrec.cpp -o bin/findrec
-	g++ src/seek1.cpp -o bin/seek1
-	g++ src/seek2.cpp -o bin/seek2
+build: $(OBJF)
+	g++ $(filter-out $(OBJDIR)/findrec.o $(OBJDIR)/seek1.o $(OBJDIR)/seek2.o,$(OBJF)) -o bin/upload
+	g++ $(filter-out $(OBJDIR)/upload.o $(OBJDIR)/seek1.o $(OBJDIR)/seek2.o,$(OBJF)) -o bin/findrec
+	g++ $(filter-out $(OBJDIR)/findrec.o $(OBJDIR)/upload.o $(OBJDIR)/seek2.o,$(OBJF)) -o bin/seek1
+	g++ $(filter-out $(OBJDIR)/findrec.o $(OBJDIR)/seek1.o $(OBJDIR)/upload.o,$(OBJF)) -o bin/seek2
 
 .PHONY: docker-build
 
@@ -33,3 +44,9 @@ docker-run-seek1:
 
 docker-run-seek2:
 	docker run --rm -v $(shell pwd)/artigo.csv:/data/input.csv tp2 ./bin/seek2 $(titulo)
+
+.PHONY: clean
+
+clean:
+	rm -f bin/*
+	rm -r $(OBJDIR)
