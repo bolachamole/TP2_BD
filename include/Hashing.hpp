@@ -2,8 +2,9 @@
 #define HASHING
 
 #include <cstdint>
-#include <vector>
 #include "../include/GerenciaBlocos.hpp"
+
+#define TAM_REGISTRO = 1542U; //tamanho maximo do registro
 
 struct registro{
 	int id;
@@ -20,14 +21,13 @@ struct registro{
 
 class Hashing{
 	private:
-		int tam_vetor;
-		std::vector<int> blocos;
-		
+		GerenciaBlocos* blocos_gerente;
+		int quant_buckets;
+		int blk_per_bucket;
+
 		std::uint64_t funcao_hash(unsigned int id);
 	public:
-		Hashing(){
-			tam_vetor = 0;
-		}
+		Hashing(GerenciaBlocos* gerente);
 		void insereHash();
 		registro buscaHash(unsigned int id);
 };

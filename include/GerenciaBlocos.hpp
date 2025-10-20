@@ -6,12 +6,15 @@
 class GerenciaBlocos{
 	private:
 		const char* arq_entrada;
+		int nitems;
 		unsigned int size_blocos;
 
 	public:
 		GerenciaBlocos(std::string arq_nome);
 
-		void setSize_blocos(int fd);
+		void setNitems(int n);
+		void setSize_blocos();
+		int getNitems();
 		unsigned int getSize_blocos();
 };
 

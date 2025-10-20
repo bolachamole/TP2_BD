@@ -8,6 +8,7 @@
 
 class ParserCSV{
     private:
+	int nitems;
         std::string arq_caminho;
         std::ifstream arq;
 	std::vector<registro*> registros;
@@ -15,7 +16,7 @@ class ParserCSV{
     public:
         ParserCSV(std::string arq_nome);
         void lerArquivo();
-        void dividePorBloco();
+        int getNitems();
 	void fechaArquivo();
 };
 

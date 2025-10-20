@@ -23,17 +23,17 @@ int main(int argc, char** argv){
 	inicio = std::chrono::steady_clock::now();
 	//colocar blocos no arquivo de dados
 	fim = std::chrono::steady_clock::now();
-	std::cout << "Tempo para armazenar os registros em blocos: " << std::chrono::duration_cast<std::chrono::milliseconds>(fim - inicio).count() << "ms \n";
+	std::cout << "Tempo para armazenar blocos no arquivo de dados: " << std::chrono::duration_cast<std::chrono::milliseconds>(fim - inicio).count() << "ms \n";
 	
 	inicio = std::chrono::steady_clock::now();
 	//indexacao primaria
 	fim = std::chrono::steady_clock::now();
-	std::cout << "Tempo para armazenar os registros em blocos: " << std::chrono::duration_cast<std::chrono::milliseconds>(fim - inicio).count() << "ms \n";
+	std::cout << "Tempo para realizar a indexação primária: " << std::chrono::duration_cast<std::chrono::milliseconds>(fim - inicio).count() << "ms \n";
 	
 	inicio = std::chrono::steady_clock::now();
 	//indexacao secundaria
 	fim = std::chrono::steady_clock::now();
-	std::cout << "Tempo para armazenar os registros em blocos: " << std::chrono::duration_cast<std::chrono::milliseconds>(fim - inicio).count() << "ms \n";
+	std::cout << "Tempo para realizar a indexação secundária: " << std::chrono::duration_cast<std::chrono::milliseconds>(fim - inicio).count() << "ms \n";
 	
 	return 0;
 }

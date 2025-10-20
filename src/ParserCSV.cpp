@@ -32,13 +32,15 @@ void ParserCSV::lerArquivo(){
 			else novoRegistro->snippet = nullptr;
 			registros.push_back(novoRegistro);
 			delete novoRegistro;
+			i++;
 		}
 	}
-
+	nitems = i;
 	this->registros = registros;
 }
 
-void ParserCSV::dividePorBloco(){
+int ParserCSV::getNitems(){
+	return nitems;
 }
 
 void ParserCSV::fechaArquivo(){
