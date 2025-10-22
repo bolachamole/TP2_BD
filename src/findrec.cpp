@@ -1,11 +1,8 @@
 #include <iostream>
 #include <string>
 #include <chrono> //mede o tempo de execucao
-#include <filesystem> //manipulacao de arquivos e diretorios
 #include <stdexcept> //trata erros de conversao
-#include "../include/Hashing.hpp" //chama arquivo hashing.hpp
-#include "../include/GerenciaBlocos.hpp" //chama arquivo GerenciaBlocos.hpp
-
+#include "../include/Hashing.hpp"
 
 void imprime_registro(const registro& reg){ //imprime os dados do registro
     std::cout << "----- Registro Encontrado -----" << std::endl;

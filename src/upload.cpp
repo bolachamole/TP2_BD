@@ -10,7 +10,6 @@ int main(int argc, char** argv){
 	std::cout << "Caminho do arquivo de entrada: " << argv[1] << '\n';
 	
 	inicio = std::chrono::steady_clock::now();
-	parser.lerArquivo();
 	fim = std::chrono::steady_clock::now();
 	std::cout << "Tempo para armazenar os dados da entrada em registros: " << std::chrono::duration_cast<std::chrono::milliseconds>(fim - inicio).count() << "ms \n";
 	parser.fechaArquivo();
