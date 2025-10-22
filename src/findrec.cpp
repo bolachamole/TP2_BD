@@ -16,7 +16,7 @@ void imprime_registro(const registro& reg){ //imprime os dados do registro
     std::cout << "Citacoes: " << reg.citacoes << std::endl;
     std::cout << "Atualizacao: " << reg.atualizacao << std::endl;
 
-    if(reg.snippet != nullptr){ //verifica se o snippet nao e nulo
+    if(reg.snippet[0] != '\0'){ //verifica se o snippet nao e nulo
         std::cout << "Snippet: " << reg.snippet << std::endl; //imprime o snippet se nao for nulo
     } else {
         std::cout << "Snippet: (NULL)" << std::endl; //imprime (NULL) se for nulo

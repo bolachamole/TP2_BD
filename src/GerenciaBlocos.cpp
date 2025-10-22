@@ -2,12 +2,8 @@
 #include <iostream>
 #include "../include/GerenciaBlocos.hpp"
 
-GerenciaBlocos::GerenciaBlocos(std::string arq_nome){
-	arq_entrada = arq_nome.c_str();
-}
-
-void GerenciaBlocos::setNitems(int n){
-	nitems = n;
+GerenciaBlocos::GerenciaBlocos(std::string nome_arquivo){
+	arq_entrada = nome_arquivo.c_str();
 }
 
 void GerenciaBlocos::setSize_blocos(){
@@ -19,24 +15,15 @@ void GerenciaBlocos::setSize_blocos(){
 		exit(1);
 	}
 	tam_bloco = (unsigned int)infostat.st_blksize;
-<<<<<<< HEAD
 
-	size_blocos = tam_bloco;
-}
-
-unsigned int GerenciaBlocos::getNitems(){
-	return nitems;
-=======
 	this->size_blocos = tam_bloco;
->>>>>>> 6a8ad93050ed84e7040ce5b1073438db32776bcc
 }
 
 unsigned int GerenciaBlocos::getSize_blocos(){
-	return size_blocos;
+	return this->size_blocos;
 }
 
-//abre arquivo
-std::fstream GerenciaBlocos::abreArquivo(const std::string &nome_arquivo, std::ios::openmode modo){
+std::fstream GerenciaBlocos::abreArquivoDeDados(std::string nome_arquivo, std::ios::openmode modo){
 	std::fstream arquivo(nome_arquivo, modo | std::ios::binary);
 	if(!arquivo.is_open()){ //verifica se o arquivo foi aberto
 		std::cerr << "Erro ao abrir o arquivo: " << nome_arquivo << std::endl;
@@ -44,14 +31,15 @@ std::fstream GerenciaBlocos::abreArquivo(const std::string &nome_arquivo, std::i
 	}
 	return arquivo;
 }
-void GerenciaBlocos::fechaArquivo(std::fstream &arquivo){ //fecha arquivo
+
+void GerenciaBlocos::fechaArquivo(std::fstream &arquivo){
 	arquivo.close();
 }
 
-int GerenciaBlocos::totalDeBlocos(std::fstream &arquivo){ //calcula total de blocos
+unsigned long long GerenciaBlocos::totalDeBlocos(std::fstream &arquivo){ //calcula total de blocos
 	arquivo.seekg(0, std::ios::end);
 	std::streampos tamanho_arquivo = arquivo.tellg();
-	return static_cast<int>(tamanho_arquivo) / this->size_blocos; //total de blocos de acorodo com o tamanho do arquivo e tamanho dos blocos
+	return static_cast<unsigned long long>(tamanho_arquivo) / this->size_blocos; //total de blocos de acorodo com o tamanho do arquivo e tamanho dos blocos
 }
 
 void GerenciaBlocos::lerBloco(std::fstream &arquivo, int indice, char* buffer){ //le bloco do arquivo

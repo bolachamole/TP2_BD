@@ -1,34 +1,21 @@
 #ifndef HASHING
 #define HASHING
 
-#include <cstdint>
 #include "../include/GerenciaBlocos.hpp"
 
-#define TAM_REGISTRO = 1542U; //tamanho maximo do registro
-
-struct registro{
-	int id;
-	unsigned int tam_titulo;
-	char titulo[300];
-	int ano;
-	unsigned int tam_autores;
-	char autores[150];
-	int citacoes;
-	char atualizacao[20];
-	unsigned int tam_snippet;
-	char* snippet;
-};
+#define NPRIMO 2654435761
 
 class Hashing{
 	private:
 		GerenciaBlocos* blocos_gerente;
-		int quant_buckets;
+		int nBuckets;
+		int reg_per_blk;
 		int blk_per_bucket;
 
-		std::uint64_t funcao_hash(unsigned int id);
+		unsigned long long funcao_hash(unsigned int id);
 	public:
 		Hashing(GerenciaBlocos* gerente);
-		void insereHash();
+		void insereHash(registro* campos);
 		registro buscaHash(unsigned int id);
 };
 
