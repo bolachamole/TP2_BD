@@ -3,29 +3,30 @@
 
 #include "../include/GerenciaBlocos.hpp"
 
-#define NPRIMO 2654435761
-
 class Hashing{
 	private:
 		GerenciaBlocos* blocos_gerente;
 		int nBuckets;
-		int reg_per_blk;
 		int blk_per_bucket;
 
+		struct p_registro{
+			unsigned long long endereco_blk;
+			unsigned int pos_reg;
+		};
+		
 		struct bucket{
-			bloco_dados* blocos;
-			struct bucket* prox;
+			unsigned long long** chaves; //enderecos do blocos
+			p_registro* ponteiro;
 		};
 
-		struct bucket_overflow{
-			bloco_dados* blocos;
-		};
+		bucket* tabela_hash;
 
 		unsigned long long funcao_hash(unsigned int id);
 	public:
 		Hashing(GerenciaBlocos* gerente);
 		void insereHash(registro* campos);
-		registro buscaHash(unsigned int id);
+		registro* buscaHash(unsigned int id);
+		void salvaArqDados();
 };
 
 #endif

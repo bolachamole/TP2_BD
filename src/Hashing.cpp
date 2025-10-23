@@ -2,22 +2,28 @@
 
 Hashing::Hashing(GerenciaBlocos* gerente){
 	blocos_gerente = gerente;
-	nBuckets = 1000;
-	reg_per_blk = gerente->getSize_blocos() / TAM_MAX_REGISTRO;
+	nBuckets = 1000; //arbitrario
 	blk_per_bucket = gerente->getSize_blocos() / nBuckets;
+	tabela_hash = new bucket[nBuckets];
 }
 
-unsigned long long Hashing::funcao_hash(unsigned int id){
-	return (id % NPRIMO) % nBuckets;
+unsigned long long Hashing::funcao_hash(unsigned int id){ //sugestao de multiplicacao de knuth
+	return (id % 2654435761) % nBuckets;
 }
 
 void Hashing::insereHash(registro* campos){
 	
 }
 
-registro Hashing::buscaHash(unsigned int id){
+registro* Hashing::buscaHash(unsigned int id){
 	unsigned long long id_buscar = funcao_hash(id);
-	registro meuResgitro;
+	registro* meuResgitro;
+
+	
 
 	return meuResgitro;
+}
+
+void Hashing::salvaArqDados(){
+
 }

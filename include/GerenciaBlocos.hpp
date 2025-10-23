@@ -3,6 +3,7 @@
 
 #include <fstream>
 #include <string>
+#include <array>
 
 #define TAM_MAX_REGISTRO 1518U //tamanho maximo do registro
 
@@ -20,7 +21,7 @@ struct registro{
 };
 
 struct bloco_dados{
-	unsigned int nRegs; //quantos registros tem
+	unsigned int nRegs; //quantos registros tem dentro
 	registro* registros;
 };
 
@@ -28,6 +29,7 @@ class GerenciaBlocos{
 	private:
 		const char* arq_entrada;
 		unsigned int size_blocos;
+		unsigned int reg_per_bloco;
 
 	public:
 		GerenciaBlocos(std::string nome_arquivo);

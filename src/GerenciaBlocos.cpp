@@ -4,6 +4,8 @@
 
 GerenciaBlocos::GerenciaBlocos(std::string nome_arquivo){
 	arq_entrada = nome_arquivo.c_str();
+	setSize_blocos();
+	reg_per_bloco = size_blocos / TAM_MAX_REGISTRO;
 }
 
 void GerenciaBlocos::setSize_blocos(){
