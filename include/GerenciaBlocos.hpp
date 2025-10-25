@@ -5,9 +5,8 @@
 #include <string>
 #include <array>
 
-#define TAM_MAX_REGISTRO 1518U //tamanho maximo do registro
-
 struct registro{
+	unsigned int total_size;
 	unsigned int id;
 	unsigned int tam_titulo;
 	char titulo[300];
@@ -20,25 +19,36 @@ struct registro{
 	char snippet[1024];
 };
 
-struct bloco_dados{
+template<size_t N>
+struct bucket{
 	unsigned int nRegs; //quantos registros tem dentro
-	registro* registros;
+	std::array<registro,N> registros;
+	unsigned long long endereco_overf; //ponteiro de registro = endereco do bucket de overflow + endereco do registro
 };
 
 class GerenciaBlocos{
 	private:
-		const char* arq_entrada;
+		const char* nome_arquivo;
+		std::fstream arquivo;
 		unsigned int size_blocos;
 		unsigned int reg_per_bloco;
+		unsigned long long size_alocados;
 
 	public:
 		GerenciaBlocos(std::string nome_arquivo);
 		void setSize_blocos();
+		void setSize_alocados(unsigned long long soma);
+
 		unsigned int getSize_blocos();
-		std::fstream abreArquivoDeDados(std::string nome_arquivo, std::ios::openmode modo);
-		void fechaArquivo(std::fstream &arquivo);
-		void lerBloco(std::fstream &arquivo,int indice, char* buffer);
-		unsigned long long totalDeBlocos(std::fstream &arquivo);
+		unsigned long long getSize_alocados();
+		unsigned int getRegperbloco();
+
+		void abreArquivo(std::ios::openmode modo);
+		void fechaArquivo();
+		void escreverBloco(unsigned long long endereco, void* bloco);
+		void escreverRegistro(unsigned long long endereco, registro campos);
+		void lerBloco(unsigned long long endereco, void* buffer);
+		unsigned int totalDeBlocos();
 };
 
 #endif
