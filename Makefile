@@ -24,6 +24,11 @@ build: $(OBJF)
 
 docker-build:
 	docker build -t tp2 .
+	mkdir -p bin
+	docker run --rm \
+		-v $(shell pwd):/app \
+		-v $(shell pwd)/bin:/app/bin \
+		tp2 make build
 
 .PHONY: docker-run-upload
 
