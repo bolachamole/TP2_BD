@@ -86,5 +86,30 @@ docker compose run --rm seek2 **título**
 
 # Layout dos arquivos
 
+Arquivo de dados (arqdados.dat): armazena dados organizados por hash com base no ID. Dividido em registros com os seguintes campos:
+
+* total_size (unsigned int): tamanho total do registro
+* id (unsigned int): ID do artigo
+* tam_titulo (unsigned int): tamanho do campo de título
+* titulo (char[300]): título do artigo
+* ano (unsigned int): ano de publicação do artigo
+* tam_autores (unsigned int): tamanho do campo de autores
+* autores (char[150]): lista de autores do artigo
+* citacoes (unsigned int): número de vezes que o artigo foi citado
+* atualizacao (char[20]): data e hora da última atualização dos dados
+* tam_snippet (unsigned int): tamanho do campo snippet
+* snippet (mínimo char[100], máximo char[1024]): resumo textual do artigo
+
+Os buckets possuem a seguinte estrutura:
+
+* nRegs (unsigned int): quantidade de registros armazenados no bloco.
+* registros (registro*): lista dos nRegs registros armazenados.
+* endereco_overf (unsigned long long): ponteiro de registro para o bucket de overflow.
+
+Arquivo de indexação primária (arqindex1.dat): organiza índices com uma árvore B+ em memória secundária com base no campo de ID.
+
+Arquivo de indexação secundária (arqindex2.dat): organiza índices com uma árvore B+ em memória secundária com base no campo de título.
 
 # Exemplo de entrada/saída
+
+

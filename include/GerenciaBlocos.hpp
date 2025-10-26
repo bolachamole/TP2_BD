@@ -3,7 +3,6 @@
 
 #include <fstream>
 #include <string>
-#include <vector>
 
 struct registro{
 	unsigned int total_size;
@@ -41,6 +40,7 @@ class GerenciaBlocos{
 
 	public:
 		GerenciaBlocos(std::string nome_arquivo);
+		GerenciaBlocos(std::string nome_arquivo, unsigned long long offset);
 		void setSize_blocos();
 		void setMapaAddr(unsigned long long endereco);
 		void somaSize_hash(unsigned long long soma);
@@ -57,10 +57,11 @@ class GerenciaBlocos{
 		void fechaArquivoFstream();
 		unsigned int totalDeBlocosArquivo();
 		void escreverBlocoMemoria(unsigned long long endereco, void* bloco);
-		void escreverBucketDisco(unsigned long long endereco, bucket bloco);
+		void escreverBucket(unsigned long long endereco, bucket bloco);
 		void* lerBlocoMemoria(unsigned long long endereco);
-		void lerBucketDisco(unsigned long long endereco, bucket bloco);
+		void lerBucket(unsigned long long endereco, bucket* buffer);
 		void escreverRegistroMemoria(unsigned long long endereco, registro campos);
+		void escreverRegistroBucket(unsigned long long endereco, registro campos);
 		void sincronizaMapa();
 };
 

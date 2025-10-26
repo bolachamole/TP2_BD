@@ -7,13 +7,20 @@
 #include <stdexcept>
 #include "../include/GerenciaBlocos.hpp"
 
+GerenciaBlocos::GerenciaBlocos(std::string nome_arquivo, unsigned long long offset){
+	this->nome_arquivo = nome_arquivo.c_str();
+	setSize_blocos();
+	regperbloco = size_blocos / sizeof(registro);
+	abreArquivo();
+	setMapaAddr(offset);
+}
+
 GerenciaBlocos::GerenciaBlocos(std::string nome_arquivo){
 	this->nome_arquivo = nome_arquivo.c_str();
 	setSize_blocos();
 	regperbloco = size_blocos / sizeof(registro);
 	size_hash = 0;
-	abreArquivo();
-	setMapaAddr(0);
+	abreArquivoFstream();
 }
 
 void GerenciaBlocos::setSize_blocos(){
@@ -113,7 +120,7 @@ void GerenciaBlocos::escreverBlocoMemoria(unsigned long long endereco, void* blo
 	blocos_escritos++;
 }
 
-void GerenciaBlocos::escreverBucketDisco(unsigned long long endereco, bucket bloco){
+void GerenciaBlocos::escreverBucket(unsigned long long endereco, bucket bloco){
 	int i;
 	arquivo.seekg(endereco, std::ios::beg); //posiciona o ponteiro no inicio do bloco
 	
@@ -151,25 +158,25 @@ void* GerenciaBlocos::lerBlocoMemoria(unsigned long long endereco){
 	return buffer;
 }
 
-void GerenciaBlocos::lerBucketDisco(unsigned long long endereco, bucket buffer){ //le bloco do arquivo
+void GerenciaBlocos::lerBucket(unsigned long long endereco, bucket* buffer){ //le bloco do arquivo
 	int i;
 	arquivo.seekg(endereco, std::ios::beg); //posiciona o ponteiro no inicio do bloco
 
-	arquivo.read(reinterpret_cast<char*>(&buffer.nRegs), sizeof(unsigned int));
-	for(i = 0; i < buffer.nRegs; i++){
-		arquivo.read(reinterpret_cast<char*>(&buffer.registros[i].total_size), sizeof(unsigned int));
-		arquivo.read(reinterpret_cast<char*>(&buffer.registros[i].id), sizeof(registro));
-		arquivo.read(reinterpret_cast<char*>(&buffer.registros[i].tam_titulo), sizeof(unsigned int));
-		arquivo.read(reinterpret_cast<char*>(&buffer.registros[i].titulo), buffer.registros[i].tam_titulo * sizeof(char));
-		arquivo.read(reinterpret_cast<char*>(&buffer.registros[i].ano), sizeof(unsigned int));
-		arquivo.read(reinterpret_cast<char*>(&buffer.registros[i].tam_autores), sizeof(unsigned int));
-		arquivo.read(reinterpret_cast<char*>(&buffer.registros[i].autores), buffer.registros[i].tam_autores * sizeof(char));
-		arquivo.read(reinterpret_cast<char*>(&buffer.registros[i].citacoes), sizeof(unsigned int));
-		arquivo.read(reinterpret_cast<char*>(&buffer.registros[i].atualizacao), 20 * sizeof(char));
-		arquivo.read(reinterpret_cast<char*>(&buffer.registros[i].tam_snippet), sizeof(unsigned int));
-		arquivo.read(reinterpret_cast<char*>(&buffer.registros[i].snippet), buffer.registros[i].tam_snippet * sizeof(char));
+	arquivo.read(reinterpret_cast<char*>(buffer->nRegs), sizeof(unsigned int));
+	for(i = 0; i < buffer->nRegs; i++){
+		arquivo.read(reinterpret_cast<char*>(buffer->registros[i].total_size), sizeof(unsigned int));
+		arquivo.read(reinterpret_cast<char*>(buffer->registros[i].id), sizeof(registro));
+		arquivo.read(reinterpret_cast<char*>(buffer->registros[i].tam_titulo), sizeof(unsigned int));
+		arquivo.read(reinterpret_cast<char*>(buffer->registros[i].titulo), buffer->registros[i].tam_titulo * sizeof(char));
+		arquivo.read(reinterpret_cast<char*>(buffer->registros[i].ano), sizeof(unsigned int));
+		arquivo.read(reinterpret_cast<char*>(buffer->registros[i].tam_autores), sizeof(unsigned int));
+		arquivo.read(reinterpret_cast<char*>(buffer->registros[i].autores), buffer->registros[i].tam_autores * sizeof(char));
+		arquivo.read(reinterpret_cast<char*>(buffer->registros[i].citacoes), sizeof(unsigned int));
+		arquivo.read(reinterpret_cast<char*>(buffer->registros[i].atualizacao), 20 * sizeof(char));
+		arquivo.read(reinterpret_cast<char*>(buffer->registros[i].tam_snippet), sizeof(unsigned int));
+		arquivo.read(reinterpret_cast<char*>(buffer->registros[i].snippet), buffer->registros[i].tam_snippet * sizeof(char));
 	}
-	arquivo.read(reinterpret_cast<char*>(&buffer.endereco_overf), sizeof(unsigned int));
+	arquivo.read(reinterpret_cast<char*>(buffer->endereco_overf), sizeof(unsigned int));
 
 	if (arquivo.fail() && !(arquivo.eof())){
 		std::cerr << "Erro ao tentar ler o bloco " << endereco << std::endl;
@@ -192,6 +199,27 @@ void GerenciaBlocos::escreverRegistroMemoria(unsigned long long endereco, regist
 	memcpy(endereco + reinterpret_cast<char*>(mapaAddr), &campos.atualizacao, 20 * sizeof(char));
 	memcpy(endereco + reinterpret_cast<char*>(mapaAddr), &campos.tam_snippet, sizeof(unsigned int));
 	memcpy(endereco + reinterpret_cast<char*>(mapaAddr), &campos.snippet, campos.tam_snippet * sizeof(char));
+}
+
+void GerenciaBlocos::escreverRegistroBucket(unsigned long long endereco, registro campos){
+	arquivo.seekg(endereco, std::ios::beg);
+	arquivo.write(reinterpret_cast<char*>(&campos.total_size), sizeof(unsigned int));
+	arquivo.write(reinterpret_cast<char*>(&campos.id), sizeof(unsigned int));
+	arquivo.write(reinterpret_cast<char*>(&campos.tam_titulo), sizeof(unsigned int));
+	arquivo.write(reinterpret_cast<char*>(&campos.titulo), campos.tam_titulo * sizeof(char));
+	arquivo.write(reinterpret_cast<char*>(&campos.ano), sizeof(unsigned int));
+	arquivo.write(reinterpret_cast<char*>(&campos.tam_autores), sizeof(unsigned int));
+	arquivo.write(reinterpret_cast<char*>(&campos.autores), campos.tam_autores * sizeof(char));
+	arquivo.write(reinterpret_cast<char*>(&campos.citacoes), sizeof(unsigned int));
+	arquivo.write(reinterpret_cast<char*>(&campos.atualizacao), 20 * sizeof(char));
+	arquivo.write(reinterpret_cast<char*>(&campos.tam_snippet), sizeof(unsigned int));
+	if (arquivo.fail()){
+		std::cerr << "Erro ao tentar escrever registro " << campos.id << " no bloco." << std::endl;
+		throw std::runtime_error("std::ostream::write() falhou.");
+	}
+	arquivo.write(reinterpret_cast<char*>(&campos.snippet), campos.tam_snippet * sizeof(char));
+	arquivo.flush();
+	arquivo.clear();
 }
 
 void GerenciaBlocos::sincronizaMapa(){

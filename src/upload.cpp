@@ -19,26 +19,26 @@ int main(int argc, char** argv){
 	inicio = std::chrono::steady_clock::now();
 	parser.lerArquivo(&tabela_hash);
 	parser.fechaArquivo();
-
-	std::cout << "Salvando tabela hash no arquivo de dados...\n";
-	tabela_hash.hash2Disco();
 	fim = std::chrono::steady_clock::now();
 
 	std::cout << "Linhas processadas: " << parser.getLinhasProc() << '\n';
 	std::cout << "Blocos lidos: " << gerente_blocos.getBlocos_lidos() << '\n';
 	std::cout << "Blocos escritos: " << gerente_blocos.getBlocos_escritos() << '\n';
 	std::cout << "Tempo total para processar os dados do arquivo de entrada: " << std::chrono::duration_cast<std::chrono::milliseconds>(fim - inicio).count() << "ms \n";
-/*	
+
+	std::cout << "Realizando a indexação primária em árvore B+...\n";
 	inicio = std::chrono::steady_clock::now();
-	//indexacao primaria
 	fim = std::chrono::steady_clock::now();
+	std::cout << "Blocos lidos: " << gerente_blocos.getBlocos_lidos() << '\n';
+	std::cout << "Blocos escritos: " << gerente_blocos.getBlocos_escritos() << '\n';
 	std::cout << "Tempo para realizar a indexação primária: " << std::chrono::duration_cast<std::chrono::milliseconds>(fim - inicio).count() << "ms \n";
 	
+	std::cout << "Realizando a indexação secundária em árvore B+...\n";
 	inicio = std::chrono::steady_clock::now();
-	//indexacao secundaria
 	fim = std::chrono::steady_clock::now();
+	std::cout << "Blocos lidos: " << gerente_blocos.getBlocos_lidos() << '\n';
+	std::cout << "Blocos escritos: " << gerente_blocos.getBlocos_escritos() << '\n';
 	std::cout << "Tempo para realizar a indexação secundária: " << std::chrono::duration_cast<std::chrono::milliseconds>(fim - inicio).count() << "ms \n";
-*/
 
 	return 0;
 }

@@ -24,7 +24,7 @@ NoBplus* BplusTree::criaNovoNo() {
 }
 
 //Função que insere a chave e o endereço do arquivo dentro da árvore. É o que será usado para fazer o upload dos arquivos
-void BplusTree::insere(int chave, int endereco) {
+void BplusTree::insere(unsigned int chave, unsigned long long endereco) {
     NoBplus* no = buscaNo(chave);
     insereNaFolha(no, chave, endereco);
     if(no->chaves.size() == this->ordem) {
@@ -44,7 +44,7 @@ void BplusTree::insere(int chave, int endereco) {
 }
 
 //Dado um nó folha, a sua chave e o endereço para o bloco dos dados será inserido nele
-void BplusTree::insereNaFolha(NoBplus* no, int chave, int endereco) {
+void BplusTree::insereNaFolha(NoBplus* no, unsigned int chave, unsigned long long endereco) {
     if(!no->chaves.empty()) {
         for(int i = 0; i < no->chaves.size(); i++) {
             if(chave < no->chaves[i]){
@@ -68,7 +68,7 @@ void BplusTree::insereNaFolha(NoBplus* no, int chave, int endereco) {
 
 
 //Função usada pra inserir um valor nos nós pais e, caso o tamanho ultrapasse a ordem, dividí-los
-void BplusTree::inserePai(NoBplus* noEsq, int chave, NoBplus* noDir) {
+void BplusTree::inserePai(NoBplus* noEsq, unsigned int chave, NoBplus* noDir) {
     if (this->raiz == noEsq) {
         NoBplus* novaRaiz = criaNovoNo();
         novaRaiz->chaves.push_back(chave);
@@ -90,7 +90,7 @@ void BplusTree::inserePai(NoBplus* noEsq, int chave, NoBplus* noDir) {
                 int meio = ceil((this->ordem+1) / 2.0);
                 paiDir->chaves.assign(pai->chaves.begin() + meio, pai->chaves.end());
                 paiDir->filhos.assign(pai->filhos.begin() + meio, pai->filhos.end());
-                int chaveMeio = pai->chaves[meio-1];
+                unsigned int chaveMeio = pai->chaves[meio-1];
                 pai->chaves.resize(meio-1);
                 pai->filhos.resize(meio);
                 for (NoBplus* filho : paiDir->filhos) {
@@ -104,7 +104,7 @@ void BplusTree::inserePai(NoBplus* noEsq, int chave, NoBplus* noDir) {
 }
 
 //Função de buscar um nó folha da árvore
-NoBplus* BplusTree::buscaNo(int chave) {
+NoBplus* BplusTree::buscaNo(unsigned int chave) {
     NoBplus* no = raiz;
     while(!no->isFolha) {
         for(int i = 0; i < no->chaves.size(); i++) {

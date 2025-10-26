@@ -20,8 +20,6 @@ class Hashing{
 		void insereOverflow(registro campos, unsigned long long endereco_over);
 		registro* buscaHash(unsigned int id);
 		registro* buscaOverflow(unsigned int id, unsigned long long endereco_over);
-		void hash2Disco();
-		void disco2Hash();
 };
 
 #endif
