@@ -28,22 +28,22 @@ docker-build:
 .PHONY: docker-run-upload
 
 docker-run-upload:
-	docker run --rm -v $(shell pwd)/artigo.csv:/data/input.csv tp2 ./bin/upload /data/input.csv
+	docker run --rm -v $(shell pwd)/data:/data tp2 ./bin/upload /data/input.csv
 
 .PHONY: docker-run-findrec
 
 docker-run-findrec:
-	docker run --rm -v $(shell pwd)/artigo.csv:/data/input.csv tp2 ./bin/findrec $(id)
+	docker run --rm -v $(shell pwd)/data:/data tp2 ./bin/findrec $(id)
 
 .PHONY: docker-run-seek1
 
 docker-run-seek1:
-	docker run --rm -v $(shell pwd)/artigo.csv:/data/input.csv tp2 ./bin/seek1 $(id)
+	docker run --rm -v $(shell pwd)/data:/data tp2 ./bin/seek1 $(id)
 
 .PHONY: docker-run-seek2
 
 docker-run-seek2:
-	docker run --rm -v $(shell pwd)/artigo.csv:/data/input.csv tp2 ./bin/seek2 $(titulo)
+	docker run --rm -v $(shell pwd)/data:/data tp2 ./bin/seek2 $(titulo)
 
 .PHONY: clean
 

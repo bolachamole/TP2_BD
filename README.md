@@ -14,7 +14,7 @@ Para construir via Docker:
 make docker-build
 ```
 
-Caso seja preciso retornar eliminar os arquivos criados:
+Caso seja preciso eliminar os arquivos criados:
 
 ```
 make clean
@@ -33,7 +33,7 @@ make docker-run-upload
 * Dentro do container:
 
 ```
-docker run --rm -v $(shell pwd)/artigo.csv:/data/input.csv tp2 ./bin/upload /data/input.csv
+docker compose run --rm upload data/input.csv
 ```
 
 Para buscar no arquivo de dados um registro com o \*\*ID** informado:
@@ -49,7 +49,7 @@ Caso não seja especificado o parâmetro, será feita a busca com o ID "123".
 * Dentro do container:
 
 ```
-docker run --rm -v $(shell pwd)/artigo.csv:/data/input.csv tp2 ./bin/findrec **ID**
+docker compose run --rm findrec **ID**
 ```
 
 Para buscar no arquivo de índice primário o registro com o \*\*ID** informado:
@@ -65,7 +65,7 @@ Caso não seja especificado o parâmetro, será feita a busca com o ID "123".
 * Dentro do container:
 
 ```
-docker run --rm -v $(shell pwd)/artigo.csv:/data/input.csv tp2 ./bin/seek1 **ID**
+docker compose run --rm seek1 **ID**
 ```
 
 Para buscar no arquivo de índice secundário o registro com o \*\*título** informado:
@@ -81,7 +81,7 @@ Caso não seja especificado o parâmetro, será feita a busca com o título "2".
 * Dentro do container:
 
 ```
-docker run --rm -v $(shell pwd)/artigo.csv:/data/input.csv tp2 ./bin/seek2 **título**
+docker compose run --rm seek2 **título**
 ```
 
 # Layout dos arquivos

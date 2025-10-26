@@ -9,10 +9,12 @@ class ParserCSV{
     private:
         std::string arq_caminho;
         std::ifstream arq;
+	int linhas_proc;
 
     public:
         ParserCSV(std::string arq_nome);
-        void lerArquivo(Hashing tabela);
+	int getLinhasProc();
+	void lerArquivo(Hashing* tabela);
 	void fechaArquivo();
 };
 

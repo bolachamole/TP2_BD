@@ -1,29 +1,34 @@
 #include <iostream>
 #include <chrono>
+#include <filesystem>
+#include "../include/GerenciaBlocos.hpp"
+#include "../include/Hashing.hpp"
 #include "../include/ParserCSV.hpp"
 
 int main(int argc, char** argv){
 	std::chrono::time_point<std::chrono::steady_clock> inicio;
 	std::chrono::time_point<std::chrono::steady_clock> fim;
+	std::filesystem::create_directories("data/db");
+	GerenciaBlocos gerente_blocos("data/db/arqdados.dat");
+	Hashing tabela_hash(&gerente_blocos);
 	ParserCSV parser(argv[1]);
 
 	std::cout << "Caminho do arquivo de entrada: " << argv[1] << '\n';
-	
-	inicio = std::chrono::steady_clock::now();
-	fim = std::chrono::steady_clock::now();
-	std::cout << "Tempo para armazenar os dados da entrada em registros: " << std::chrono::duration_cast<std::chrono::milliseconds>(fim - inicio).count() << "ms \n";
-	parser.fechaArquivo();
+	std::cout << "Processando linhas...\n";
 
 	inicio = std::chrono::steady_clock::now();
-	//colocar registros em blocos
+	parser.lerArquivo(&tabela_hash);
+	parser.fechaArquivo();
+
+	std::cout << "Salvando tabela hash no arquivo de dados...\n";
+	tabela_hash.hash2Disco();
 	fim = std::chrono::steady_clock::now();
-	std::cout << "Tempo para armazenar os registros em blocos: " << std::chrono::duration_cast<std::chrono::milliseconds>(fim - inicio).count() << "ms \n";
-	
-	inicio = std::chrono::steady_clock::now();
-	//colocar blocos no arquivo de dados
-	fim = std::chrono::steady_clock::now();
-	std::cout << "Tempo para armazenar blocos no arquivo de dados: " << std::chrono::duration_cast<std::chrono::milliseconds>(fim - inicio).count() << "ms \n";
-	
+
+	std::cout << "Linhas processadas: " << parser.getLinhasProc() << '\n';
+	std::cout << "Blocos lidos: " << gerente_blocos.getBlocos_lidos() << '\n';
+	std::cout << "Blocos escritos: " << gerente_blocos.getBlocos_escritos() << '\n';
+	std::cout << "Tempo total para processar os dados do arquivo de entrada: " << std::chrono::duration_cast<std::chrono::milliseconds>(fim - inicio).count() << "ms \n";
+/*	
 	inicio = std::chrono::steady_clock::now();
 	//indexacao primaria
 	fim = std::chrono::steady_clock::now();
@@ -33,6 +38,7 @@ int main(int argc, char** argv){
 	//indexacao secundaria
 	fim = std::chrono::steady_clock::now();
 	std::cout << "Tempo para realizar a indexação secundária: " << std::chrono::duration_cast<std::chrono::milliseconds>(fim - inicio).count() << "ms \n";
-	
+*/
+
 	return 0;
 }

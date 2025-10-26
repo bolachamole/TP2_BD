@@ -3,7 +3,7 @@
 
 #include <fstream>
 #include <string>
-#include <array>
+#include <vector>
 
 struct registro{
 	unsigned int total_size;
@@ -19,36 +19,49 @@ struct registro{
 	char snippet[1024];
 };
 
-template<size_t N>
 struct bucket{
 	unsigned int nRegs; //quantos registros tem dentro
-	std::array<registro,N> registros;
+	registro* registros;
 	unsigned long long endereco_overf; //ponteiro de registro = endereco do bucket de overflow + endereco do registro
 };
 
 class GerenciaBlocos{
 	private:
 		const char* nome_arquivo;
+		int fd;
 		std::fstream arquivo;
+		void* mapaAddr;
 		unsigned int size_blocos;
-		unsigned int reg_per_bloco;
-		unsigned long long size_alocados;
+		unsigned int quant_bloco;
+		unsigned int regperbloco;
+		unsigned long long aloc_mapa = 4000; //4KB
+		unsigned long long size_hash;
+		int blocos_lidos;
+		int blocos_escritos;
 
 	public:
 		GerenciaBlocos(std::string nome_arquivo);
 		void setSize_blocos();
-		void setSize_alocados(unsigned long long soma);
+		void setMapaAddr(unsigned long long endereco);
+		void somaSize_hash(unsigned long long soma);
 
 		unsigned int getSize_blocos();
-		unsigned long long getSize_alocados();
+		unsigned long long getSize_hash();
 		unsigned int getRegperbloco();
+		int getBlocos_lidos();
+		int getBlocos_escritos();
 
-		void abreArquivo(std::ios::openmode modo);
+		void abreArquivo();
+		void abreArquivoFstream();
 		void fechaArquivo();
-		void escreverBloco(unsigned long long endereco, void* bloco);
-		void escreverRegistro(unsigned long long endereco, registro campos);
-		void lerBloco(unsigned long long endereco, void* buffer);
-		unsigned int totalDeBlocos();
+		void fechaArquivoFstream();
+		unsigned int totalDeBlocosArquivo();
+		void escreverBlocoMemoria(unsigned long long endereco, void* bloco);
+		void escreverBucketDisco(unsigned long long endereco, bucket bloco);
+		void* lerBlocoMemoria(unsigned long long endereco);
+		void lerBucketDisco(unsigned long long endereco, bucket bloco);
+		void escreverRegistroMemoria(unsigned long long endereco, registro campos);
+		void sincronizaMapa();
 };
 
 #endif

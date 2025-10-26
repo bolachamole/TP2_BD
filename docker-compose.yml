@@ -1,0 +1,28 @@
+services:
+  upload:
+    image: tp2
+    volumes:
+      - ./data:/data
+    working_dir: /app
+    command: ["./bin/upload"]
+
+  findrec:
+    image: tp2
+    volumes:
+      - ./data:/data
+    working_dir: /app
+    command: ["./bin/findrec"]
+
+  seek1:
+    image: tp2
+    volumes:
+      - ./data:/data
+    working_dir: /app
+    command: ["./bin/seek1"]
+
+  seek2:
+    image: tp2
+    volumes:
+      - ./data:/data
+    working_dir: /app
+    command: ["./bin/seek2"]
