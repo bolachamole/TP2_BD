@@ -8,7 +8,7 @@
 #include <queue>
 
 struct NoBplus {
-    bool isFolha;
+    bool isFolha; //dita se um nó é folha ou não
     std::vector<int> chaves;
     std::vector<NoBplus*> filhos; //somente para nós internos
     std::vector<int> enderecos;  //somente para nós folhas
@@ -17,7 +17,7 @@ struct NoBplus {
 };
 
 class BplusTree {
-    std::fstream arquivo;
+    std::fstream arquivo; //arquivo que está salvo os dados da árvore B+. Usado pra achar os nós dentro do disco
     int ordem;
     NoBplus* raiz;
 

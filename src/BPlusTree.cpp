@@ -8,12 +8,13 @@
 
 
 BplusTree::BplusTree(int ordem) {
-    raiz = BplusTree::criaNovoNo();
+    raiz = BplusTree::criaNovoNo(); //cria a raiz e define-a como uma folha
     raiz->isFolha = true;
     raiz->pai = nullptr;
-    this->ordem = ordem;
+    this->ordem = ordem; //define a ordem da árvore
 }
 
+//funcao que cria um novo nó e o define como intermediário
 NoBplus* BplusTree::criaNovoNo() {
     NoBplus* novoNo = new NoBplus;
     novoNo->isFolha = false;
@@ -22,6 +23,7 @@ NoBplus* BplusTree::criaNovoNo() {
     return novoNo;
 }
 
+//Função que insere a chave e o endereço do arquivo dentro da árvore. É o que será usado para fazer o upload dos arquivos
 void BplusTree::insere(int chave, int endereco) {
     NoBplus* no = buscaNo(chave);
     insereNaFolha(no, chave, endereco);
@@ -41,6 +43,7 @@ void BplusTree::insere(int chave, int endereco) {
     
 }
 
+//Dado um nó folha, a sua chave e o endereço para o bloco dos dados será inserido nele
 void BplusTree::insereNaFolha(NoBplus* no, int chave, int endereco) {
     if(!no->chaves.empty()) {
         for(int i = 0; i < no->chaves.size(); i++) {
@@ -63,6 +66,8 @@ void BplusTree::insereNaFolha(NoBplus* no, int chave, int endereco) {
     //salva bloco em memoria secundaria
 }
 
+
+//Função usada pra inserir um valor nos nós pais e, caso o tamanho ultrapasse a ordem, dividí-los
 void BplusTree::inserePai(NoBplus* noEsq, int chave, NoBplus* noDir) {
     if (this->raiz == noEsq) {
         NoBplus* novaRaiz = criaNovoNo();
@@ -98,6 +103,7 @@ void BplusTree::inserePai(NoBplus* noEsq, int chave, NoBplus* noDir) {
     }
 }
 
+//Função de buscar um nó folha da árvore
 NoBplus* BplusTree::buscaNo(int chave) {
     NoBplus* no = raiz;
     while(!no->isFolha) {
@@ -120,6 +126,7 @@ NoBplus* BplusTree::buscaNo(int chave) {
     
 }
 
+//funcao usada pra imprimir o conteúdo das árvores e foi usada nos testes da árvore  
 void BplusTree::imprimeArvore() {
     std::queue<NoBplus*> enderecos;
     enderecos.push(raiz);
@@ -146,13 +153,5 @@ void BplusTree::imprimeArvore() {
 
 }
 
-int main() {
-    BplusTree robert(3);
-    for(int i = 0; i < 25; i++) {
-        robert.insere(i, 100);
-    }
-    robert.imprimeArvore();
-    return 0;
-}
 
 
