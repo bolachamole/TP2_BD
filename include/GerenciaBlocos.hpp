@@ -27,22 +27,16 @@ struct bucket{
 class GerenciaBlocos{
 	private:
 		const char* nome_arquivo;
-		int fd;
 		std::fstream arquivo;
-		void* mapaAddr;
 		unsigned int size_blocos;
-		unsigned int quant_bloco;
 		unsigned int regperbloco;
-		unsigned long long aloc_mapa = 4000; //4KB
 		unsigned long long size_hash;
 		int blocos_lidos;
 		int blocos_escritos;
 
 	public:
 		GerenciaBlocos(std::string nome_arquivo);
-		GerenciaBlocos(std::string nome_arquivo, unsigned long long offset);
 		void setSize_blocos();
-		void setMapaAddr(unsigned long long endereco);
 		void somaSize_hash(unsigned long long soma);
 
 		unsigned int getSize_blocos();
@@ -52,17 +46,12 @@ class GerenciaBlocos{
 		int getBlocos_escritos();
 
 		void abreArquivo();
-		void abreArquivoFstream();
 		void fechaArquivo();
-		void fechaArquivoFstream();
 		unsigned int totalDeBlocosArquivo();
-		void escreverBlocoMemoria(unsigned long long endereco, void* bloco);
-		void escreverBucket(unsigned long long endereco, bucket bloco);
-		void* lerBlocoMemoria(unsigned long long endereco);
+		void escreverBloco(unsigned long long endereco, char* bloco);
+		void lerBloco(unsigned long long endereco, char* buffer);
 		void lerBucket(unsigned long long endereco, bucket* buffer);
-		void escreverRegistroMemoria(unsigned long long endereco, registro campos);
-		void escreverRegistroBucket(unsigned long long endereco, registro campos);
-		void sincronizaMapa();
+		void escreverRegistroBloco(unsigned long long endereco, registro campos);
 };
 
 #endif

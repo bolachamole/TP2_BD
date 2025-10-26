@@ -2,11 +2,13 @@
 #include <vector>
 #include <fstream>
 #include <math.h>
-#include "../include/BPlusTree.hpp"
+#include <cstring>
+#include "../include/BPlusTreeSecundaria.hpp"
 #include "../include/GerenciaBlocos.hpp"
 
-BplusTree::BplusTree(int ordem, GerenciaBlocos* blocos_gerente, GerenciaBlocos* dados_gerente) {
-	raiz = BplusTree::criaNovoNo(); //cria a raiz e define-a como uma folha
+
+BplusTreeSecundaria::BplusTreeSecundaria(int ordem, GerenciaBlocos* blocos_gerente, GerenciaBlocos* dados_gerente) {
+	raiz = BplusTreeSecundaria::criaNovoNo(); //cria a raiz e define-a como uma folha
 	raiz->isFolha = true;
 	raiz->pai = nullptr;
 	this->ordem = ordem; //define a ordem da árvore
@@ -15,8 +17,8 @@ BplusTree::BplusTree(int ordem, GerenciaBlocos* blocos_gerente, GerenciaBlocos* 
 }
 
 //funcao que cria um novo nó e o define como intermediário
-NoBplus* BplusTree::criaNovoNo() {
-    NoBplus* novoNo = new NoBplus;
+NoBplus2* BplusTreeSecundaria::criaNovoNo() {
+    NoBplus2* novoNo = new NoBplus2;
     novoNo->isFolha = false;
     novoNo->pai = nullptr;
     novoNo->proximo = nullptr;
@@ -24,11 +26,11 @@ NoBplus* BplusTree::criaNovoNo() {
 }
 
 //Função que insere a chave e o endereço do arquivo dentro da árvore. É o que será usado para fazer o upload dos arquivos
-void BplusTree::insere(unsigned int chave, unsigned long long endereco) {
-    NoBplus* no = buscaNo(chave);
+void BplusTreeSecundaria::insere(chave_titulo chave, unsigned long long endereco) {
+    NoBplus2* no = buscaNo(chave);
     insereNaFolha(no, chave, endereco);
     if(no->chaves.size() == this->ordem) {
-        NoBplus* novoNo = criaNovoNo();
+        NoBplus2* novoNo = criaNovoNo();
         novoNo->isFolha = true;
         novoNo->pai = no->pai;
         int meio = ceil(this->ordem / 2.0);
@@ -43,11 +45,10 @@ void BplusTree::insere(unsigned int chave, unsigned long long endereco) {
 }
 
 //Dado um nó folha, a sua chave e o endereço para o bloco dos dados será inserido nele
-void BplusTree::insereNaFolha(NoBplus* no, unsigned int chave, unsigned long long endereco) {
-    char* buffer = new char[blocos_gerente->getSize_blocos()];
+void BplusTreeSecundaria::insereNaFolha(NoBplus2* no, chave_titulo chave, unsigned long long endereco) {
     if(!no->chaves.empty()) {
         for(int i = 0; i < no->chaves.size(); i++) {
-            if(chave < no->chaves[i]){
+            if(chave.tam_titulo < no->chaves[i].tam_titulo){
                 no->chaves.insert(no->chaves.begin() + i, chave);
                 no->enderecos.insert(no->enderecos.begin() + i, endereco);
                 break;
@@ -63,14 +64,14 @@ void BplusTree::insereNaFolha(NoBplus* no, unsigned int chave, unsigned long lon
         no->chaves.push_back(chave);
         no->enderecos.push_back(endereco);
     }
-    delete[] buffer;
+    //salva bloco em memoria secundaria
 }
 
 
 //Função usada pra inserir um valor nos nós pais e, caso o tamanho ultrapasse a ordem, dividí-los
-void BplusTree::inserePai(NoBplus* noEsq, unsigned int chave, NoBplus* noDir) {
+void BplusTreeSecundaria::inserePai(NoBplus2* noEsq, chave_titulo chave, NoBplus2* noDir) {
     if (this->raiz == noEsq) {
-        NoBplus* novaRaiz = criaNovoNo();
+        NoBplus2* novaRaiz = criaNovoNo();
         novaRaiz->chaves.push_back(chave);
         novaRaiz->filhos.push_back(noEsq);
         novaRaiz->filhos.push_back(noDir);
@@ -79,21 +80,21 @@ void BplusTree::inserePai(NoBplus* noEsq, unsigned int chave, NoBplus* noDir) {
         noEsq->pai = novaRaiz;
         return;
     } 
-    NoBplus* pai = noEsq->pai;
+    NoBplus2* pai = noEsq->pai;
     for(int i = 0; i < pai->filhos.size(); i++) {
         if (pai->filhos[i] == noEsq) {
             pai->chaves.insert(pai->chaves.begin() + i, chave);
             pai->filhos.insert(pai->filhos.begin() + i + 1, noDir);
             if (pai->filhos.size() > this->ordem) {
-                NoBplus* paiDir = criaNovoNo();
+                NoBplus2* paiDir = criaNovoNo();
                 paiDir->pai = pai->pai;
                 int meio = ceil((this->ordem+1) / 2.0);
                 paiDir->chaves.assign(pai->chaves.begin() + meio, pai->chaves.end());
                 paiDir->filhos.assign(pai->filhos.begin() + meio, pai->filhos.end());
-                unsigned int chaveMeio = pai->chaves[meio-1];
+                chave_titulo chaveMeio = pai->chaves[meio-1];
                 pai->chaves.resize(meio-1);
                 pai->filhos.resize(meio);
-                for (NoBplus* filho : paiDir->filhos) {
+                for (NoBplus2* filho : paiDir->filhos) {
                     filho->pai = paiDir;
                 }
                 inserePai(pai, chaveMeio, paiDir);
@@ -104,15 +105,15 @@ void BplusTree::inserePai(NoBplus* noEsq, unsigned int chave, NoBplus* noDir) {
 }
 
 //Função de buscar um nó folha da árvore
-NoBplus* BplusTree::buscaNo(unsigned int chave) {
-    NoBplus* no = raiz;
+NoBplus2* BplusTreeSecundaria::buscaNo(chave_titulo chave) {
+    NoBplus2* no = raiz;
     while(!no->isFolha) {
         for(int i = 0; i < no->chaves.size(); i++) {
-            if (chave == no->chaves[i]) {
+            if (chave.tam_titulo == no->chaves[i].tam_titulo) {
                 no = no->filhos[i+1];
                 break;
             }
-            else if (chave < no->chaves[i]) {
+            else if (chave.tam_titulo < no->chaves[i].tam_titulo) {
                 no = no->filhos[i];
                 break;
             }
@@ -126,8 +127,9 @@ NoBplus* BplusTree::buscaNo(unsigned int chave) {
     
 }
 
-void BplusTree::criaIdexPrimario(){
+void BplusTreeSecundaria::criaIdexSecundario(){
     bucket meuBucket;
+    chave_titulo chave;
     unsigned long long endereco;
     unsigned int i;
 
@@ -136,7 +138,9 @@ void BplusTree::criaIdexPrimario(){
     while(endereco <= dados_gerente->getSize_hash()){
     	dados_gerente->lerBucket(endereco, &meuBucket);
         for(i = 0; i < meuBucket.nRegs; i++){
-            insere(meuBucket.registros[i].id, endereco);
+            strcpy(chave.titulo, meuBucket.registros[i].titulo);
+            chave.tam_titulo = meuBucket.registros[i].tam_titulo;
+            insere(chave, endereco);
         }
     }
 }

@@ -4,17 +4,7 @@
 Hashing::Hashing(GerenciaBlocos* gerente){
 	blocos_gerente = gerente;
 	nBuckets = 512; //2^9 para fins da funcao hash
-	setBucketVazio();
 	setTabela_hash();
-}
-
-void Hashing::setBucketVazio(){
-	int i;
-	bucket_vazio.nRegs = 0;
-	for(i = 0; i < blocos_gerente->getRegperbloco(); i++){
-		bucket_vazio.registros[i] = registro{};
-	}
-	bucket_vazio.endereco_overf = 0;
 }
 
 void Hashing::setTabela_hash(){
@@ -23,10 +13,12 @@ void Hashing::setTabela_hash(){
 	tabela_hash = new unsigned long long[nBuckets];
 
 	for(i = 0; i < nBuckets; i++){
-		blocos_gerente->somaSize_hash(sizeof(blocos_gerente->getSize_blocos()));
+		char* buffer = new char[blocos_gerente->getSize_blocos()];
+		blocos_gerente->somaSize_hash(blocos_gerente->getSize_blocos());
 		alocado = blocos_gerente->getSize_hash();
 		tabela_hash[i] = alocado;
-		blocos_gerente->escreverBucket(tabela_hash[i], bucket_vazio);
+		blocos_gerente->escreverBloco(tabela_hash[i], buffer);
+		delete[] buffer;
 	}
 }
 
@@ -47,7 +39,7 @@ void Hashing::insereHash(registro campos){
 			tam_regs += meuBucket.registros[i].total_size;
 		}
 		offset = sizeof(unsigned int) + tam_regs; //4 bytes do nRegs + seja la quantos registros ja estiverem la
-		blocos_gerente->escreverRegistroBucket(tabela_hash[id_hash] + offset, campos);
+		blocos_gerente->escreverRegistroBloco(tabela_hash[id_hash] + offset, campos);
 
 	} else{ //escrever no bucket de overflow
 		std::cout << "Houve colisão ao inserir no bucket " << id_hash << '\n';
@@ -67,7 +59,7 @@ void Hashing::insereOverflow(registro campos, unsigned long long endereco_over){
 	blocos_gerente->lerBucket(endereco_over, meuBucket);
 	if(meuBucket->nRegs < blocos_gerente->getRegperbloco()){
 		offset = sizeof(unsigned int) + meuBucket->nRegs * sizeof(registro); //4 bytes do nRegs + seja la quantos registros ja estiverem la
-		blocos_gerente->escreverRegistroBucket(endereco_over + offset, campos);
+		blocos_gerente->escreverRegistroBloco(endereco_over + offset, campos);
 
 	} else{ //escrever no bucket de overflow
 		if(meuBucket->endereco_overf == 0){ //cria bucket de overflow se nao existir

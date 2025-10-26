@@ -13,9 +13,9 @@ class ParserCSV{
 
     public:
         ParserCSV(std::string arq_nome);
-	int getLinhasProc();
-	void lerArquivo(Hashing* tabela);
-	void fechaArquivo();
+		int getLinhasProc();
+		void lerArquivo(Hashing* tabela);
+		void fechaArquivo();
 };
 
 #endif
