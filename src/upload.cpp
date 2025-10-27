@@ -6,13 +6,22 @@
 #include "../include/ParserCSV.hpp"
 #include "../include/BPlusTree.hpp"
 #include "../include/BPlusTreeSecundaria.hpp"
+#include "../include/LogLevels.hpp"
 
 int main(int argc, char** argv){
-	std::cout << "Caminho do arquivo de entrada: " << argv[1] << '\n';
+	if (argc != 2) {
+        LogLevels::logErro("Uso: " + std::string(argv[0]) + " <ID>");
+        return 1;
+    }
+
+	LogLevels::logInfo("Caminho do arquivo de entrada: " + std::string(argv[1]));
 
 	std::chrono::time_point<std::chrono::steady_clock> inicio;
 	std::chrono::time_point<std::chrono::steady_clock> fim;
+	
 	std::filesystem::create_directories("data/db");
+	LogLevels::logDebug("Diretório data/db criado.");
+
 	GerenciaBlocos gerente_blocos("data/db/arqdados.dat");
 	GerenciaBlocos gerente_blocos_primario("data/db/index1.db");
 	GerenciaBlocos gerente_blocos_secundario("data/db/index2.db");
@@ -21,7 +30,8 @@ int main(int argc, char** argv){
 	BplusTree arvore1(3, &gerente_blocos_primario, &gerente_blocos); //arvore de ordem 3 para indexacao primaria
 	BplusTreeSecundaria arvore2(3, &gerente_blocos_secundario, &gerente_blocos); //arvore de ordem 3 para indexacao secundaria
 
-	std::cout << "Processando linhas...\n";
+	LogLevels::logDebug("Classes instanciadas.");
+	LogLevels::logInfo("Processando linhas...");
 
 	inicio = std::chrono::steady_clock::now();
 	parser.lerArquivo(&tabela_hash);
@@ -30,20 +40,20 @@ int main(int argc, char** argv){
 	arvore2.criaIdexSecundario();
 	fim = std::chrono::steady_clock::now();
 
-	std::cout << "Linhas processadas: " << parser.getLinhasProc() << '\n';
-	std::cout << "Estatísticas da carregamento em hash:\n";
-	std::cout << "	- Blocos lidos: " << gerente_blocos.getBlocos_lidos() << '\n';
-	std::cout << "	- Blocos escritos: " << gerente_blocos.getBlocos_escritos() << '\n';
+	LogLevels::logInfo("Linhas processadas: " + parser.getLinhasProc());
+	LogLevels::logInfo("Estatísticas da carregamento em hash:");
+	LogLevels::logInfo("	- Blocos lidos: " + gerente_blocos.getBlocos_lidos());
+	LogLevels::logInfo("	- Blocos escritos: " + gerente_blocos.getBlocos_escritos());
 
-	std::cout << "Estatísticas da indexação primária:\n";
-	std::cout << "	- Blocos lidos: " << gerente_blocos_primario.getBlocos_lidos() << '\n';
-	std::cout << "	- Blocos escritos: " << gerente_blocos_primario.getBlocos_escritos() << '\n';
+	LogLevels::logInfo("Estatísticas da indexação primária:");
+	LogLevels::logInfo("	- Blocos lidos: " + gerente_blocos_primario.getBlocos_lidos());
+	LogLevels::logInfo("	- Blocos escritos: " + gerente_blocos_primario.getBlocos_escritos());
 	
-	std::cout << "Estatísticas da indexação secundária:\n";
-	std::cout << "	- Blocos lidos: " << gerente_blocos_secundario.getBlocos_lidos() << '\n';
-	std::cout << "	- Blocos escritos: " << gerente_blocos_secundario.getBlocos_escritos() << '\n';
+	LogLevels::logInfo("Estatísticas da indexação secundária:");
+	LogLevels::logInfo("	- Blocos lidos: " + gerente_blocos_secundario.getBlocos_lidos());
+	LogLevels::logInfo("	- Blocos escritos: " + gerente_blocos_secundario.getBlocos_escritos());
 
-	std::cout << "	Tempo total para processar os dados do arquivo de entrada: " << std::chrono::duration_cast<std::chrono::milliseconds>(fim - inicio).count() << "ms \n";
+	LogLevels::logInfo("	Tempo total para processar os dados do arquivo de entrada: " + std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(fim - inicio).count()) + "ms");
 
 	return 0;
 }

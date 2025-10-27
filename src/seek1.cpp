@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include "../include/GerenciaBlocos.hpp"
 #include "../include/BPlusTree.hpp"
+#include "../include/LogLevels.hpp"
 
 void imprime_registro(const registro& reg){ 
     std::cout << "----- Registro Encontrado -----\n";
@@ -23,7 +24,7 @@ void imprime_registro(const registro& reg){
 
 int main(int argc, char** argv) {
     if (argc != 2) {
-        std::cerr << "Uso: " << argv[0] << " <ID>\n";
+        LogLevels::logErro("Uso: " + std::string(argv[0]) + " <ID>");
         return 1;
     }
 
@@ -31,7 +32,7 @@ int main(int argc, char** argv) {
     try {
         id_busca = std::stoul(argv[1]);
     } catch (...) {
-        std::cerr << "Erro: ID invalido.\n";
+        LogLevels::logErro("Erro: ID invalido.");
         return 1;
     }
 
@@ -39,7 +40,7 @@ int main(int argc, char** argv) {
     std::string data_file_path = data_dir_env ? std::string(data_dir_env) + "/arqdados.dat" : "data/db/arqdados.dat";
     std::string index_file_path = data_dir_env ? std::string(data_dir_env) + "/index1.db" : "data/db/index1.db";
 
-    std::cout << "Buscando ID " << id_busca << " via indice primario...\n";
+    LogLevels::logInfo("Buscando ID \"" + std::to_string(id_busca) + "\" via indice primário...");
 
     GerenciaBlocos gerente_idx(index_file_path);
     GerenciaBlocos gerente_dados(data_file_path);
@@ -76,14 +77,14 @@ int main(int argc, char** argv) {
         imprime_registro(reg_encontrado);
     }   
     else{
-        std::cout << "Registro com ID " << id_busca << " nao encontrado.\n";
+        LogLevels::logInfo("Registro com ID " + std::to_string(id_busca) + " nao encontrado.");
     }
 
-    std::cout << "Tempo de execucao: " << duracao << " ms\n";
-    std::cout << "Blocos lidos no indice: " << gerente_idx.getBlocos_lidos() << "\n";
-    std::cout << "Total de blocos no indice: " << gerente_idx.totalDeBlocosArquivo() << "\n";
+    LogLevels::logInfo("Tempo de execucao: " + std::to_string(duracao) + " ms");
+    LogLevels::logInfo("Blocos lidos: " + gerente_idx.getBlocos_lidos());
+    LogLevels::logInfo("Total de blocos no arquivo de índice: " + gerente_idx.totalDeBlocosArquivo());
 
-    gerente_idx.fechaArquivoFstream();
-    gerente_dados.fechaArquivoFstream();
+    gerente_idx.fechaArquivo();
+    gerente_dados.fechaArquivo();
     return 0;
 }

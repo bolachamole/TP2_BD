@@ -2,6 +2,7 @@
 #include <iostream>
 #include <stdexcept>
 #include "../include/GerenciaBlocos.hpp"
+#include "../include/LogLevels.hpp"
 
 GerenciaBlocos::GerenciaBlocos(std::string nome_arquivo){
 	this->nome_arquivo = nome_arquivo.c_str();
@@ -16,7 +17,7 @@ void GerenciaBlocos::setSize_blocos(){
 	unsigned int tam_bloco;
 
 	if(stat("data/input.csv", &infostat) == -1){
-		std::cerr << "Erro ao tentar pegar o tamanho dos blocos.";
+		LogLevels::logErro("Erro ao tentar pegar o tamanho dos blocos.");
 		throw std::runtime_error("stat() falhou.");
 	}
 	tam_bloco = (unsigned int)infostat.st_blksize;
@@ -51,12 +52,12 @@ int GerenciaBlocos::getBlocos_escritos(){
 void GerenciaBlocos::abreArquivo(){
 	arquivo.open(nome_arquivo, std::ios::in | std::ios::out | std::ios::binary);
 	if(!arquivo.is_open()){ //verifica se o arquivo foi aberto
-		std::cerr << "Erro ao abrir o arquivo: " << nome_arquivo << std::endl;
+		LogLevels::logErro("Erro ao abrir o arquivo " + std::string(nome_arquivo));
 		throw std::runtime_error("std::fstream::open() falhou.");
 	}
 }
 
-void GerenciaBlocos::fechaArquivoFstream(){
+void GerenciaBlocos::fechaArquivo(){
 	arquivo.close();
 }
 
@@ -71,7 +72,7 @@ void GerenciaBlocos::escreverBloco(unsigned long long endereco, char* bloco){
 	arquivo.seekg(endereco, std::ios::beg); //posiciona o ponteiro no inicio do bloco
 	arquivo.write(bloco, this->size_blocos); //escreve no bloco
 	if (arquivo.fail()){
-		std::cerr << "Erro ao tentar escrever no bloco " << endereco << std::endl;
+		LogLevels::logErro("Erro ao tentar escrever no bloco " + std::to_string(endereco));
 		throw std::runtime_error("std::ostream::write() falhou.");
 	}
 	arquivo.flush(); //garante que escreveu no disco
@@ -84,7 +85,7 @@ void GerenciaBlocos::lerBloco(unsigned long long endereco, char* buffer){ //le b
 	arquivo.seekg(endereco, std::ios::beg); //posiciona o ponteiro no inicio do bloco
 	arquivo.read(buffer, this->size_blocos); //le o bloco e armazena no buffer
 	if (arquivo.fail() && !(arquivo.eof())){
-		std::cerr << "Erro ao tentar ler o bloco " << endereco << std::endl;
+		LogLevels::logErro("Erro ao tentar ler o bloco " + endereco);
 		throw std::runtime_error("std::istream::read() falhou.");
 	}
 	arquivo.clear();
@@ -111,7 +112,7 @@ void GerenciaBlocos::lerBucket(unsigned long long endereco, bucket* buffer){ //l
 	arquivo.read(reinterpret_cast<char*>(buffer->endereco_overf), sizeof(unsigned int));
 
 	if (arquivo.fail() && !(arquivo.eof())){
-		std::cerr << "Erro ao tentar ler o bloco " << endereco << std::endl;
+		LogLevels::logErro("Erro ao tentar ler o bloco " + std::to_string(endereco));
 		throw std::runtime_error("std::istream::read() falhou.");
 	}
 
@@ -132,7 +133,7 @@ void GerenciaBlocos::escreverRegistroBloco(unsigned long long endereco, registro
 	arquivo.write(reinterpret_cast<char*>(&campos.atualizacao), 20 * sizeof(char));
 	arquivo.write(reinterpret_cast<char*>(&campos.tam_snippet), sizeof(unsigned int));
 	if (arquivo.fail()){
-		std::cerr << "Erro ao tentar escrever registro " << campos.id << " no bloco." << std::endl;
+		LogLevels::logErro("Erro ao tentar escrever registro " + std::to_string(campos.id) + " no bloco.");
 		throw std::runtime_error("std::ostream::write() falhou.");
 	}
 	arquivo.write(reinterpret_cast<char*>(&campos.snippet), campos.tam_snippet * sizeof(char));

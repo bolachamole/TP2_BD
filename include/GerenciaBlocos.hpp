@@ -47,13 +47,12 @@ class GerenciaBlocos{
 		void zeraBlocosLidos(){blocos_lidos=0;}
 
 		void abreArquivo();
-		void fechaArquivoFstream();
+		void fechaArquivo();
 		unsigned int totalDeBlocosArquivo();
 		void escreverBloco(unsigned long long endereco, char* bloco);
 		void lerBloco(unsigned long long endereco, char* buffer);
 		void lerBucket(unsigned long long endereco, bucket* buffer);
 		void escreverRegistroBloco(unsigned long long endereco, registro campos);
-		void* lerBlocoMemoria(unsigned long long endereco);
 };
 
 #endif

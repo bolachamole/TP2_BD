@@ -5,6 +5,7 @@
 #include <cstring>
 #include "../include/GerenciaBlocos.hpp"
 #include "../include/BPlusTreeSecundaria.hpp"
+#include "../include/LogLevels.hpp"
 
 void imprime_registro(const registro& reg){ 
     std::cout << "----- Registro Encontrado -----\n";
@@ -23,7 +24,7 @@ void imprime_registro(const registro& reg){
 
 int main(int argc, char** argv) {
     if (argc != 2) {
-        std::cerr << "Uso: " << argv[0] << " \"<Titulo>\"\n";
+        LogLevels::logErro("Uso: " + std::string(argv[0]) + " <ID>");
         return 1;
     }
 
@@ -33,7 +34,7 @@ int main(int argc, char** argv) {
     std::string data_file_path= data_dir_env ? std::string(data_dir_env) + "/arqdados.dat" : "data/db/arqdados.dat";
     std::string index_file_path= data_dir_env ? std::string(data_dir_env) + "/index2.db" : "data/db/index2.db";
 
-    std::cout << "Buscando titulo \"" << titulo_busca << "\" via indice secundario...\n";
+    LogLevels::logInfo("Buscando titulo \"" + titulo_busca + "\" via indice secundario...");
 
     GerenciaBlocos gerente_idx(index_file_path);
     GerenciaBlocos gerente_dados(data_file_path);
@@ -75,14 +76,14 @@ int main(int argc, char** argv) {
 
     }
     else{
-        std::cout << "Registro com título \"" << titulo_busca << "\" não encontrado.\n";
+        LogLevels::logInfo("Registro com título \"" + titulo_busca + "\" não encontrado.");
     }
 
-    std::cout << "Tempo de execução: " << duracao << " ms\n";
-    std::cout << "Blocos lidos no indice: " << gerente_idx.getBlocos_lidos() << "\n";
-    std::cout << "Total de blocos no indice: " << gerente_idx.totalDeBlocosArquivo() << "\n";
+    LogLevels::logInfo("Tempo de execucao: " + std::to_string(duracao) + " ms");
+    LogLevels::logInfo("Blocos lidos: " + gerente_idx.getBlocos_lidos());
+    LogLevels::logInfo("Total de blocos no arquivo de índice: " + gerente_idx.totalDeBlocosArquivo());
 
-    gerente_idx.fechaArquivoFstream();
-    gerente_dados.fechaArquivoFstream();
+    gerente_idx.fechaArquivo();
+    gerente_dados.fechaArquivo();
     return 0;
 }

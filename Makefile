@@ -32,7 +32,7 @@ docker-build:
 .PHONY: docker-run-upload
 
 docker-run-upload:
-	docker run --rm -v $(shell pwd)/data:/data tp2 ./bin/upload /data/input.csv
+	docker run --rm -v $(shell pwd)/data:/data tp2 ./bin/upload data/input.csv
 
 .PHONY: docker-run-findrec
 
@@ -53,4 +53,5 @@ docker-run-seek2:
 
 clean:
 	rm -f bin/*
-	rm -r $(OBJDIR)
+	rm -f -r $(OBJDIR)
+	docker rmi tp2

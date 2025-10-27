@@ -6,6 +6,7 @@
 #include <iomanip> //
 #include "../include/GerenciaBlocos.hpp"
 #include "../include/Hashing.hpp"
+#include "../include/LogLevels.hpp"
 
 void imprime_registro(const registro& reg){ //imprime os dados do registro
     std::cout << "----- Registro Encontrado -----" << std::endl;
@@ -24,8 +25,8 @@ void imprime_registro(const registro& reg){ //imprime os dados do registro
 }
 
 int main(int argc, char** argv){
-    if (argc != 2){
-        std::cerr << "Erro, uso: " << argv[0] << " <ID>" << std::endl;
+    if (argc != 2) {
+        LogLevels::logErro("Uso: " + std::string(argv[0]) + " <ID>");
         return 1;
     }
 
@@ -33,10 +34,10 @@ int main(int argc, char** argv){
     try {
         id_busca= std::stoul(argv[1]);
     } catch (const std::invalid_argument& e) {
-        std::cerr << "Erro: ID invalido. Deve ser um numero inteiro." << std::endl;
+        LogLevels::logErro("Erro: ID invalido. Deve ser um numero inteiro.");
         return 1;
     } catch (const std::out_of_range& e) {
-        std::cerr << "Erro: ID fora do intervalo de inteiros." << std::endl;
+        LogLevels::logErro("Erro: ID fora do intervalo de inteiros.");
         return 1;
     }
 
@@ -48,7 +49,7 @@ int main(int argc, char** argv){
         data_file_path= "data/db/arqdados.dat"; //
     }
 
-    std::cout << "Caminho do arquivo de dados: " << data_file_path << std::endl;
+    LogLevels::logInfo("Caminho do arquivo de dados: " + data_file_path);
 
     auto inicio = std::chrono::steady_clock::now(); //inicio da contagem de tempo
 
@@ -65,13 +66,13 @@ int main(int argc, char** argv){
         imprime_registro(*encontrado);
         delete encontrado; //libera a memoria alocada por buscaHash
     } else {
-        std::cout << "Registro com ID " << id_busca << " nao encontrado." << std::endl;
+        LogLevels::logInfo("Registro com ID " + std::to_string(id_busca) + " nao encontrado.");
     }
-    std::cout << "Tempo de execucao: " << duracao << " ms" << std::endl;
-    std::cout << "Blocos lidos: " << gerente_blocos.getBlocos_lidos() << std::endl;
-    std::cout << "Total de blocos no arquivo: " << gerente_blocos.totalDeBlocosArquivo() << std::endl;
+    LogLevels::logInfo("Tempo de execucao: " + std::to_string(duracao) + " ms");
+    LogLevels::logInfo("Blocos lidos: " + gerente_blocos.getBlocos_lidos());
+    LogLevels::logInfo("Total de blocos no arquivo: " + gerente_blocos.totalDeBlocosArquivo());
 
-    gerente_blocos.fechaArquivoFstream();
+    gerente_blocos.fechaArquivo();
 
 
     return 0;
