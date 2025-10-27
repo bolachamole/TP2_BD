@@ -16,7 +16,7 @@ void GerenciaBlocos::setSize_blocos(){
 	struct stat infostat;
 	unsigned int tam_bloco;
 
-	if(stat("data/input.csv", &infostat) == -1){
+	if(stat("/data/input.csv", &infostat) == -1){
 		LogLevels::logErro("Erro ao tentar pegar o tamanho dos blocos.");
 		throw std::runtime_error("stat() falhou.");
 	}

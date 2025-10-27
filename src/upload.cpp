@@ -19,12 +19,12 @@ int main(int argc, char** argv){
 	std::chrono::time_point<std::chrono::steady_clock> inicio;
 	std::chrono::time_point<std::chrono::steady_clock> fim;
 	
-	std::filesystem::create_directories("data/db");
+	std::filesystem::create_directories("/data/db");
 	LogLevels::logDebug("Diretório data/db criado.");
 
-	GerenciaBlocos gerente_blocos("data/db/arqdados.dat");
-	GerenciaBlocos gerente_blocos_primario("data/db/index1.db");
-	GerenciaBlocos gerente_blocos_secundario("data/db/index2.db");
+	GerenciaBlocos gerente_blocos("/data/db/arqdados.dat");
+	GerenciaBlocos gerente_blocos_primario("/data/db/index1.db");
+	GerenciaBlocos gerente_blocos_secundario("/data/db/index2.db");
 	Hashing tabela_hash(&gerente_blocos);
 	ParserCSV parser(argv[1]);
 	BplusTree arvore1(3, &gerente_blocos_primario, &gerente_blocos); //arvore de ordem 3 para indexacao primaria

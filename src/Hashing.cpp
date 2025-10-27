@@ -1,5 +1,6 @@
 #include <iostream>
 #include "../include/Hashing.hpp"
+#include "../include/LogLevels.hpp"
 
 Hashing::Hashing(GerenciaBlocos* gerente){
 	blocos_gerente = gerente;
@@ -42,7 +43,7 @@ void Hashing::insereHash(registro campos){
 		blocos_gerente->escreverRegistroBloco(tabela_hash[id_hash] + offset, campos);
 
 	} else{ //escrever no bucket de overflow
-		std::cout << "Houve colisão ao inserir no bucket " << id_hash << '\n';
+		LogLevels::logWarn("Houve colisão ao inserir no bucket " + id_hash);
 		if(meuBucket.endereco_overf == 0){ //cria bucket de overflow se nao existir
 			blocos_gerente->somaSize_hash(sizeof(blocos_gerente->getSize_blocos()));
 			alocado = blocos_gerente->getSize_hash();

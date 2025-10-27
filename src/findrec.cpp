@@ -74,6 +74,6 @@ int main(int argc, char** argv){
 
     gerente_blocos.fechaArquivo();
 
-
+	LogLevels::logDebug("Arquivo fechado. Programa retorna 0.");
     return 0;
 }

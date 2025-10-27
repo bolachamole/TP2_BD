@@ -33,7 +33,7 @@ make docker-run-upload
 * Dentro do container:
 
 ```
-docker compose run --rm upload data/input.csv
+docker compose run --rm upload input.csv
 ```
 
 Para buscar no arquivo de dados um registro com o \*\*ID** informado:
@@ -84,6 +84,14 @@ Caso não seja especificado o parâmetro, será feita a busca com o título "2".
 docker compose run --rm seek2 **título**
 ```
 
+Sejam info, debug, erro e warn níveis de log, adicione -e LOG_LEVEL=\*\*nível de log** ao comando para mudar a configuração do nível de mensagens de log no docker.
+
+Exemplo:
+
+```
+docker compose run --rm -e LOG_LEVEL=erro upload input.csv
+```
+
 # Layout dos arquivos
 
 Arquivo de dados (arqdados.dat): armazena dados organizados por hash com base no ID. Dividido em registros com os seguintes campos:
@@ -112,4 +120,16 @@ Arquivo de indexação secundária (arqindex2.dat): organiza índices com uma á
 
 # Exemplo de entrada/saída
 
-
+```
+$ make docker-run-findrec id=265606
+"Caminho do arquivo de dados: data/db/arqdados.dat
+----- Registro Encontrado -----
+ID: 265606
+Titulo: Airplane Boarding, Disk Scheduling and Space-Time Geometry
+Ano: 2005
+Autores: Eitan Bachmat|Daniel Berend|Luba Sapir|Steven Skiena
+Citacoes: 7
+Atualizacao: 2016-10-06 17:26:00
+"Snippet: Airplane boarding, disk scheduling and space-time geometry. E Bachmat, D Berend, L Sapir, S Skiena -   Applications in Management, 2005 - Springer. Abstract We show how the process of passengers boarding an airplane and the process of  optimal I/O scheduling to a disk drive with a linear seek function can be asymptotically  modeled by 2-dimensional space-time geometry. We relate the space-time geometry of  ..
+------------------------------
+```

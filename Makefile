@@ -27,12 +27,13 @@ docker-build:
 	mkdir -p bin
 	docker run --rm -d --name temp_tp2 tp2 sleep 5
 	docker cp temp_tp2:/app/bin/. ./bin/
+	docker cp temp_tp2:/app/artigo.csv ./data/input.csv
 	docker rm -f temp_tp2
 
 .PHONY: docker-run-upload
 
 docker-run-upload:
-	docker run --rm -v $(shell pwd)/data:/data tp2 ./bin/upload data/input.csv
+	docker run --rm -v $(shell pwd)/data:/data tp2 ./bin/upload /data/input.csv
 
 .PHONY: docker-run-findrec
 
@@ -54,4 +55,5 @@ docker-run-seek2:
 clean:
 	rm -f bin/*
 	rm -f -r $(OBJDIR)
+	rm -f -r data/*
 	docker rmi tp2

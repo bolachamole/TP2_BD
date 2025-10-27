@@ -4,25 +4,25 @@ services:
     volumes:
       - ./data:/data
     working_dir: /app
-    command: ["./bin/upload"]
+    entrypoint: ["./bin/upload"]
 
   findrec:
     image: tp2
     volumes:
       - ./data:/data
     working_dir: /app
-    command: ["./bin/findrec"]
+    entrypoint: ["./bin/findrec"]
 
   seek1:
     image: tp2
     volumes:
       - ./data:/data
     working_dir: /app
-    command: ["./bin/seek1"]
+    entrypoint: ["./bin/seek1"]
 
   seek2:
     image: tp2
     volumes:
       - ./data:/data
     working_dir: /app
-    command: ["./bin/seek2"]
+    entrypoint: ["./bin/seek2"]
