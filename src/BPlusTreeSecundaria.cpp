@@ -64,7 +64,6 @@ void BplusTreeSecundaria::insereNaFolha(NoBplus2* no, chave_titulo chave, unsign
         no->chaves.push_back(chave);
         no->enderecos.push_back(endereco);
     }
-    //salva bloco em memoria secundaria
 }
 
 
@@ -143,4 +142,5 @@ void BplusTreeSecundaria::criaIdexSecundario(){
             insere(chave, endereco);
         }
     }
+    blocos_gerente->escreverBloco(0, reinterpret_cast<char*>(raiz));
 }

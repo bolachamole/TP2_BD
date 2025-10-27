@@ -14,7 +14,7 @@ Para construir via Docker:
 make docker-build
 ```
 
-Caso seja preciso eliminar os arquivos criados:
+Caso seja preciso eliminar tudo:
 
 ```
 make clean

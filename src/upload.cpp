@@ -8,6 +8,8 @@
 #include "../include/BPlusTreeSecundaria.hpp"
 
 int main(int argc, char** argv){
+	std::cout << "Caminho do arquivo de entrada: " << argv[1] << '\n';
+
 	std::chrono::time_point<std::chrono::steady_clock> inicio;
 	std::chrono::time_point<std::chrono::steady_clock> fim;
 	std::filesystem::create_directories("data/db");
@@ -19,7 +21,6 @@ int main(int argc, char** argv){
 	BplusTree arvore1(3, &gerente_blocos_primario, &gerente_blocos); //arvore de ordem 3 para indexacao primaria
 	BplusTreeSecundaria arvore2(3, &gerente_blocos_secundario, &gerente_blocos); //arvore de ordem 3 para indexacao secundaria
 
-	std::cout << "Caminho do arquivo de entrada: " << argv[1] << '\n';
 	std::cout << "Processando linhas...\n";
 
 	inicio = std::chrono::steady_clock::now();

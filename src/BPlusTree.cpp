@@ -44,7 +44,6 @@ void BplusTree::insere(unsigned int chave, unsigned long long endereco) {
 
 //Dado um nó folha, a sua chave e o endereço para o bloco dos dados será inserido nele
 void BplusTree::insereNaFolha(NoBplus* no, unsigned int chave, unsigned long long endereco) {
-    char* buffer = new char[blocos_gerente->getSize_blocos()];
     if(!no->chaves.empty()) {
         for(int i = 0; i < no->chaves.size(); i++) {
             if(chave < no->chaves[i]){
@@ -63,7 +62,6 @@ void BplusTree::insereNaFolha(NoBplus* no, unsigned int chave, unsigned long lon
         no->chaves.push_back(chave);
         no->enderecos.push_back(endereco);
     }
-    delete[] buffer;
 }
 
 
@@ -139,4 +137,5 @@ void BplusTree::criaIdexPrimario(){
             insere(meuBucket.registros[i].id, endereco);
         }
     }
+    blocos_gerente->escreverBloco(0, reinterpret_cast<char*>(raiz));
 }
