@@ -4,6 +4,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends g++ make cmake 
 
 WORKDIR /app
 COPY . /app
+RUN make build
 
 VOLUME ["/data"]
 

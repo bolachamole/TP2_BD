@@ -25,10 +25,9 @@ build: $(OBJF)
 docker-build:
 	docker build -t tp2 .
 	mkdir -p bin
-	docker run --rm \
-		-v $(shell pwd):/app \
-		-v $(shell pwd)/bin:/app/bin \
-		tp2 make build
+	docker run --rm -d --name temp_tp2 tp2 sleep 5
+	docker cp temp_tp2:/app/bin/. ./bin/
+	docker rm -f temp_tp2
 
 .PHONY: docker-run-upload
 
