@@ -56,7 +56,7 @@ void GerenciaBlocos::abreArquivo(){
 	}
 }
 
-void GerenciaBlocos::fechaArquivo(){
+void GerenciaBlocos::fechaArquivoFstream(){
 	arquivo.close();
 }
 

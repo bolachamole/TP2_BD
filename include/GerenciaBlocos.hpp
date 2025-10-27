@@ -31,27 +31,29 @@ class GerenciaBlocos{
 		unsigned int size_blocos;
 		unsigned int regperbloco;
 		unsigned long long size_hash;
-		int blocos_lidos;
-		int blocos_escritos;
+		int blocos_lidos=0;
+		int blocos_escritos=0;
 
 	public:
 		GerenciaBlocos(std::string nome_arquivo);
-		void setSize_blocos();
 		void somaSize_hash(unsigned long long soma);
+		void setSize_blocos();
 
 		unsigned int getSize_blocos();
 		unsigned long long getSize_hash();
 		unsigned int getRegperbloco();
 		int getBlocos_lidos();
 		int getBlocos_escritos();
+		void zeraBlocosLidos(){blocos_lidos=0;}
 
 		void abreArquivo();
-		void fechaArquivo();
+		void fechaArquivoFstream();
 		unsigned int totalDeBlocosArquivo();
 		void escreverBloco(unsigned long long endereco, char* bloco);
 		void lerBloco(unsigned long long endereco, char* buffer);
 		void lerBucket(unsigned long long endereco, bucket* buffer);
 		void escreverRegistroBloco(unsigned long long endereco, registro campos);
+		void* lerBlocoMemoria(unsigned long long endereco);
 };
 
 #endif
